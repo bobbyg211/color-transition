@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="main.css" />
+
+    <title>Scroll Color Transition</title>
+  </head>
+  <body>
+    <div class="content-wrapper">
+      <div class="mark">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="70.953"
+          height="86.758"
+          viewBox="0 0 70.953 86.758"
+        >
+          <defs>
+            <linearGradient
+              id="a"
+              x1="0.59"
+              y1="0.609"
+              x2="0.193"
+              y2="0.151"
+              gradientUnits="objectBoundingBox"
+            >
+              <stop offset="0" stop-color="#009dff"></stop>
+              <stop offset="1" stop-color="#1345b5"></stop>
+            </linearGradient>
+          </defs>
+          <path
+            class="a"
+            style="fill: url(#a)"
+            d="M4168.769,110.452a25,25,0,0,1-7.834-5.354,25.4,25.4,0,0,1-5.256-7.909,25.387,25.387,0,0,1,0-19.45,26.307,26.307,0,0,1,2.033-3.827l-6.706-13.185c-.368.051-.735.093-1.095.121-.532.045-1.118.069-1.746.069h-7.783V75.075H4132v-49.4h16.165a20.113,20.113,0,0,1,10.562,2.91,17.075,17.075,0,0,1,7.389,9.737c.057.277.1.459.139.622a3.622,3.622,0,0,0,.164.493l.053.13v.34a3.313,3.313,0,0,1,.159.784q.03.363.09.725l.011.059v.06a5.86,5.86,0,0,1,.065.848V44.21a5.676,5.676,0,0,1-.065.839v.134l-.011.059c-.04.242-.07.475-.09.7a4.048,4.048,0,0,1-.159.8v.277l-.043.12a5.153,5.153,0,0,0-.288,1.08l-.008.065-.019.062a17.766,17.766,0,0,1-2.809,5.509,17.192,17.192,0,0,1-4.513,4.117,1.341,1.341,0,0,1-.135.106l4.824,9.549a25.464,25.464,0,0,1,5.288-3.143,24.108,24.108,0,0,1,23.4,2.322,25.352,25.352,0,0,1,5.19,4.876,26.422,26.422,0,0,1,3.692,6.164l.429,1.008h-9.605l-.209-.356a16.351,16.351,0,0,0-5.589-5.714,14.458,14.458,0,0,0-7.7-2.145,14.649,14.649,0,0,0-6.159,1.326,16.112,16.112,0,0,0-5.048,3.614,17.615,17.615,0,0,0-3.417,5.346,17.609,17.609,0,0,0,0,13.091,17.63,17.63,0,0,0,3.417,5.347,16.074,16.074,0,0,0,5.048,3.615,14.961,14.961,0,0,0,11.566.316,15.619,15.619,0,0,0,4.63-2.818,16.912,16.912,0,0,0,3.474-4.29,17.489,17.489,0,0,0,1.8-4.481H4177V84.025h25.759l.057.66q.067.745.1,1.418c.022.455.034.909.034,1.361,0,.63-.022,1.251-.068,1.845s-.114,1.184-.2,1.777a24.365,24.365,0,0,1-2.749,8.418,25.08,25.08,0,0,1-5.361,6.786,24.67,24.67,0,0,1-7.362,4.5,24.442,24.442,0,0,1-18.442-.34Zm-28.321-57.114h8.561a7.809,7.809,0,0,0,3.6-.836,9.492,9.492,0,0,0,2.867-2.25,11.6,11.6,0,0,0,1.953-3.234,9.974,9.974,0,0,0,0-7.478,11,11,0,0,0-1.946-3.225,9.761,9.761,0,0,0-2.873-2.224,7.8,7.8,0,0,0-3.6-.837h-8.561ZM4201.48,78.846Z"
+            transform="translate(-4132 -25.676)"
+          ></path>
+        </svg>
+      </div>
+      <nav id="navigation">
+        <a class="global-btn"> HIRE ME </a>
+        <button class="open-close">
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+
+      <div class="block block-1"></div>
+      <div class="block block-2"></div>
+      <!-- <div class="space"></div> -->
+      <div class="block block-3"></div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="main.js"></script>
+    <script>
+      const blocks = colorTrans(
+        ["body"],
+        [".block"],
+        [["#00256c", "#1e0081", "#00697c"]],
+        [["backgroundColor"]]
+      );
+
+      const logo = colorTrans(
+        [".mark svg linearGradient stop"],
+        [".block"],
+        [
+          ["#009DFF", "#C5A0FF", "#00AEB5"],
+          ["#1345B5", "#9E29DD", "#0075A0"],
+        ],
+        [["stopColor"]]
+      );
+
+      const hire = colorTrans(
+        ["#navigation .global-btn"],
+        [".block"],
+        [
+          [
+            { color1: "#1345B5", color2: "#009DFF" },
+            { color1: "#4E00FF", color2: "#C5A0FF" },
+            { color1: "#00334E", color2: "#00AEB5" },
+          ],
+        ],
+        [["backgroundImage"]]
+      );
+
+      const menu = colorTrans(
+        [".open-close", ".open-close span"],
+        [".block"],
+        [["#67d0ff", "#c3a1ff", "#1afcee"]],
+        [["borderColor"], ["backgroundColor"], ["backgroundColor"]]
+      );
+
+      blocks.init();
+      logo.init();
+      hire.init();
+      menu.init();
+    </script>
+  </body>
+</html>
