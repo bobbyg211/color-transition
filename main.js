@@ -6,6 +6,41 @@ const colorTrans = (elemsArr, pointsArr, colorsArr, propsArr) => {
     const propsInit = getProps(propsArr, elemsInit);
     const groups = createGroups(elemsInit, pointsInit, colorsInit, propsInit);
 
+    window.addEventListener("load", () => {
+      if (groups[0].points[0].top > 0) {
+        groups.forEach((group) => {
+          const { elems, colors, props } = group;
+
+          elems.forEach((elem, i) => {
+            let color;
+
+            if (!Array.isArray(colors[0])) {
+              color = {
+                r: colors[0].r,
+                g: colors[0].g,
+                b: colors[0].b,
+              };
+            } else {
+              color = [
+                {
+                  r: colors[0][0].r,
+                  g: colors[0][0].g,
+                  b: colors[0][0].b,
+                },
+                {
+                  r: colors[0][1].r,
+                  g: colors[0][1].g,
+                  b: colors[0][1].b,
+                },
+              ];
+            }
+
+            setProps(elem, props, color);
+          });
+        });
+      }
+    });
+
     ["load", "scroll"].forEach((e) => {
       window.addEventListener(e, () => {
         const scrollPos = window.pageYOffset;

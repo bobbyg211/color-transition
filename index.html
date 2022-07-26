@@ -40,7 +40,6 @@
       </div>
       <nav id="navigation">
         <a class="global-btn"> HIRE ME </a>
-        <a class="global-btn"> HIRE ME </a>
         <button class="open-close">
           <span></span>
           <span></span>
@@ -149,9 +148,9 @@
         </div>
       </div>
 
-      <div class="block block-1"></div>
+      <div class="space"></div>
       <div class="block block-2"></div>
-      <!-- <div class="space"></div> -->
+
       <div class="block block-3"></div>
     </div>
 
@@ -166,7 +165,7 @@
       const blocks = colorTrans(
         ["body"],
         [".block"],
-        ["#00256c", "#1e0081", "#00697c"],
+        ["#1e0081", "#00697c", "#00256c"],
         ["backgroundColor"]
       );
 
@@ -174,8 +173,8 @@
         [".mark svg linearGradient stop"],
         [".block"],
         [
-          ["#009DFF", "#C5A0FF", "#00AEB5"],
-          ["#1345B5", "#9E29DD", "#0075A0"],
+          ["#C5A0FF", "#00AEB5", "#009DFF"],
+          ["#9E29DD", "#0075A0", "#1345B5"],
         ],
         ["stopColor"]
       );
@@ -184,9 +183,9 @@
         ["#navigation .global-btn"],
         [".block"],
         [
-          { c1: "#1345B5", c2: "#009DFF" },
           { c1: "#4E00FF", c2: "#C5A0FF" },
           { c1: "#00334E", c2: "#00AEB5" },
+          { c1: "#1345B5", c2: "#009DFF" },
         ],
         [["backgroundImage"], ["borderColor"]]
       );
@@ -194,7 +193,7 @@
       const menu = colorTrans(
         [[".open-close"], [".open-close span"]],
         [".block"],
-        ["#67d0ff", "#c3a1ff", "#1afcee"],
+        ["#c3a1ff", "#1afcee", "#67d0ff"],
         [["borderColor"], ["backgroundColor"]]
       );
 
@@ -208,7 +207,7 @@
           [".social svg path"],
         ],
         [".block"],
-        ["#67d0ff", "#c3a1ff", "#1afcee"],
+        ["#c3a1ff", "#1afcee", "#67d0ff"],
         [["stroke"], ["fill"]]
       );
 
