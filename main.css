@@ -94,3 +94,33 @@ button.open-close span:nth-child(2) {
   bottom: 0;
   margin-top: clamp(4px, 0.547vw, 7px);
 }
+
+.social {
+  pointer-events: auto;
+  position: fixed;
+  z-index: 999999;
+  bottom: 20px;
+  left: 20px;
+}
+
+.social > div:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.social a {
+  display: block;
+  line-height: 1;
+  font-size: 0;
+}
+
+.social svg {
+  max-width: clamp(40px, 3.906vw, 50px);
+  width: 100%;
+  height: auto;
+}
+
+.social svg > g,
+.social svg > g {
+  fill: none;
+  stroke-width: 2px;
+}

@@ -1,62 +1,68 @@
 const colorTrans = (elemsArr, pointsArr, colorsArr, propsArr) => {
   function transition() {
-    const elems = getElems(elemsArr, colorsArr);
-    const props = propsArr;
+    const elemsInit = getElems(elemsArr, colorsArr);
+    const pointsInit = getPoints(pointsArr, elemsInit);
+    const colorsInit = getColors(colorsArr, elemsInit);
+    const propsInit = getProps(propsArr, elemsInit);
+    const groups = createGroups(elemsInit, pointsInit, colorsInit, propsInit);
 
     ["load", "scroll"].forEach((e) => {
       window.addEventListener(e, () => {
         const scrollPos = window.pageYOffset;
-        const points = getPoints(pointsArr, scrollPos);
 
-        elems.forEach((elem, i) => {
-          points.forEach((point, j) => {
-            if (point.top <= 0 && point.bottom >= 0 && j < points.length - 1) {
-              const perc = -points[j].top / points[j].height;
-              let color;
+        groups.forEach((group) => {
+          group.points = getPoints(pointsArr, elemsInit, scrollPos)[0];
+          const { elems, points, colors, props } = group;
 
-              if (!elem.color[j].length) {
-                const diff = {
-                  r: elem.color[j + 1].r - elem.color[j].r,
-                  g: elem.color[j + 1].g - elem.color[j].g,
-                  b: elem.color[j + 1].b - elem.color[j].b,
-                };
+          elems.forEach((elem, i) => {
+            points.forEach((point, j) => {
+              if (point.top <= 0 && point.bottom >= 0 && j < points.length - 1) {
+                const perc = -points[j].top / points[j].height;
+                let color;
 
-                color = {
-                  r: diff.r * perc + elem.color[j].r,
-                  g: diff.g * perc + elem.color[j].g,
-                  b: diff.b * perc + elem.color[j].b,
-                };
-              } else {
-                const diff = [
-                  {
-                    r: elem.color[j + 1][0].r - elem.color[j][0].r,
-                    g: elem.color[j + 1][0].g - elem.color[j][0].g,
-                    b: elem.color[j + 1][0].b - elem.color[j][0].b,
-                  },
-                  {
-                    r: elem.color[j + 1][1].r - elem.color[j][1].r,
-                    g: elem.color[j + 1][1].g - elem.color[j][1].g,
-                    b: elem.color[j + 1][1].b - elem.color[j][1].b,
-                  },
-                ];
+                if (!Array.isArray(colors[j])) {
+                  const diff = {
+                    r: colors[j + 1].r - colors[j].r,
+                    g: colors[j + 1].g - colors[j].g,
+                    b: colors[j + 1].b - colors[j].b,
+                  };
 
-                color = [
-                  {
-                    r: diff[0].r * perc + elem.color[j][0].r,
-                    g: diff[0].g * perc + elem.color[j][0].g,
-                    b: diff[0].b * perc + elem.color[j][0].b,
-                  },
-                  {
-                    r: diff[1].r * perc + elem.color[j][1].r,
-                    g: diff[1].g * perc + elem.color[j][1].g,
-                    b: diff[1].b * perc + elem.color[j][1].b,
-                  },
-                ];
+                  color = {
+                    r: diff.r * perc + colors[j].r,
+                    g: diff.g * perc + colors[j].g,
+                    b: diff.b * perc + colors[j].b,
+                  };
+                } else {
+                  const diff = [
+                    {
+                      r: colors[j + 1][0].r - colors[j][0].r,
+                      g: colors[j + 1][0].g - colors[j][0].g,
+                      b: colors[j + 1][0].b - colors[j][0].b,
+                    },
+                    {
+                      r: colors[j + 1][1].r - colors[j][1].r,
+                      g: colors[j + 1][1].g - colors[j][1].g,
+                      b: colors[j + 1][1].b - colors[j][1].b,
+                    },
+                  ];
+
+                  color = [
+                    {
+                      r: diff[0].r * perc + colors[j][0].r,
+                      g: diff[0].g * perc + colors[j][0].g,
+                      b: diff[0].b * perc + colors[j][0].b,
+                    },
+                    {
+                      r: diff[1].r * perc + colors[j][1].r,
+                      g: diff[1].g * perc + colors[j][1].g,
+                      b: diff[1].b * perc + colors[j][1].b,
+                    },
+                  ];
+                }
+
+                setProps(elem, props, color);
               }
-
-              if (props.length === 1) i = 0;
-              setProps(elem, props[i], color);
-            }
+            });
           });
         });
       });
@@ -64,69 +70,140 @@ const colorTrans = (elemsArr, pointsArr, colorsArr, propsArr) => {
   }
 
   function getElems(arr, colors) {
+    if (!Array.isArray(arr[0]) && Array.isArray(colors[0])) {
+      let elems = [...document.querySelectorAll(arr)];
+      let newArr = [];
+
+      elems.forEach((elem, i) => {
+        newArr = [...newArr, [arr[0] + `:nth-child(${i + 1})`]];
+      });
+
+      arr = newArr;
+    } else if (!Array.isArray(arr[0])) {
+      arr = [arr];
+    }
+
     let allElems = [];
-    arr.forEach((elem, i) => {
-      allElems = [...allElems, ...document.querySelectorAll(elem)];
+    arr.forEach((group) => {
+      let currElems = [];
+      group.forEach((elem) => {
+        currElems = [...currElems, ...document.querySelectorAll(elem)];
+      });
+
+      allElems = [...allElems, currElems];
     });
 
-    let elemsWithColors = [];
-    allElems.forEach((elem, i) => {
-      if (colors.length === 1) i = 0;
-      elemsWithColors = [...elemsWithColors, { el: elem, color: getColors(colors[i]) }];
-    });
-
-    return elemsWithColors;
+    return allElems;
   }
 
-  function getPoints(arr, scrollPos) {
+  function getPoints(arr, elems, scrollPos) {
+    if (!Array.isArray(arr[0])) {
+      arr = elems.map(() => arr);
+    }
+    scrollPos = scrollPos !== undefined ? scrollPos : 0;
+
     let allElems = [];
-    arr.forEach((elem) => {
-      allElems = [...allElems, ...document.querySelectorAll(elem)];
+    arr.forEach((group) => {
+      let currElems = [];
+      group.forEach((elem) => {
+        let allPoints = [];
+        let currPoints = [...document.querySelectorAll(elem)];
+
+        currPoints.forEach((point) => {
+          const rect = point.getBoundingClientRect();
+          allPoints = [
+            ...allPoints,
+            {
+              el: point,
+              top: rect.top,
+              bottom: rect.bottom,
+              height: rect.height,
+              offsetTop: rect.top + scrollPos,
+              offsetBottom: rect.bottom + scrollPos,
+            },
+          ];
+        });
+
+        currElems = [...currElems, ...allPoints];
+      });
+
+      allElems = [...allElems, currElems];
     });
 
-    let allPoints = [];
-    allElems.reverse().forEach((point, i) => {
-      const rect = point.getBoundingClientRect();
-      allPoints = [
-        ...allPoints,
-        {
-          el: point,
-          top: rect.top,
-          bottom: rect.bottom,
-          height: rect.height,
-          offsetTop: rect.top + scrollPos,
-          offsetBottom: rect.bottom + scrollPos,
-        },
-      ];
-    });
-
-    return allPoints.reverse();
+    return allElems;
   }
 
-  function getColors(arr) {
+  function getColors(arr, elems) {
+    if (!Array.isArray(arr[0])) {
+      arr = elems.map(() => arr);
+    }
+
     let allColors = [];
-    arr.forEach((color) => {
-      allColors = [...allColors, hexToRgb(color)];
-    });
+    arr.forEach((group) => {
+      let currColors = [];
+      group.forEach((color) => {
+        currColors = [...currColors, hexToRgb(color)];
+      });
 
-    // console.log(allColors);
+      allColors = [...allColors, currColors];
+    });
 
     return allColors;
   }
 
+  function getProps(arr, elems) {
+    if (!Array.isArray(arr[0])) {
+      arr = elems.map(() => arr);
+    }
+
+    let allProps = [];
+    arr.forEach((group) => {
+      let currProps = [];
+      group.forEach((prop) => {
+        currProps = [...currProps, prop];
+      });
+
+      allProps = [...allProps, currProps];
+    });
+
+    return allProps;
+  }
+
+  function createGroups(elems, points, colors, props) {
+    let allGroups = [];
+
+    elems.forEach((arr, i) => {
+      if (!points[i] || !colors[i] || !props[i]) {
+        const err = new Error(
+          `The number of 'point', 'color', and 'prop' sets must me greater than or equal to the number of 'element' sets.`
+        );
+
+        err.name = "Set Count Error";
+        throw err;
+      }
+
+      allGroups = [
+        ...allGroups,
+        { elems: arr, points: points[i], colors: colors[i], props: props[i] },
+      ];
+    });
+
+    return allGroups;
+  }
+
+  // Utilities
   function setProps(elem, props, color) {
     props.forEach((prop) => {
       if (!color.length) {
-        elem.el.style[prop] = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        elem.style[prop] = `rgb(${color.r}, ${color.g}, ${color.b})`;
       } else {
-        elem.el.style[
+        elem.style[
           prop
         ] = `linear-gradient(90deg, rgb(${color[0].r}, ${color[0].g}, ${color[0].b}), rgb(${color[1].r}, ${color[1].g}, ${color[1].b}))`;
       }
     });
   }
 
-  // Utilities
   function hexToRgb(hex) {
     if (typeof hex === "string") {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -138,8 +215,8 @@ const colorTrans = (elemsArr, pointsArr, colorsArr, propsArr) => {
           }
         : null;
     } else if (typeof hex === "object") {
-      const result1 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.color1);
-      const result2 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.color2);
+      const result1 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.c1);
+      const result2 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.c2);
 
       return result1 && result2
         ? [
